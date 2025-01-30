@@ -1,0 +1,41 @@
+import pandas as pd #manupuler la data et l analyser
+import numpy as np #manupuler les matrices
+import matplotlib.pyplot as plt #visualisation
+from sklearn.model_selection import train_test_split #diviser le dataset en train et test
+from sklearn.linear_model import LinearRegression #model de regression lineaire
+
+#charger le dataset
+data = pd.read_csv('salary_Data.csv')
+#voir les 5 premieres lignes
+#print(data.info())
+#print(data.head(10))
+
+#selectioner les colonnes yearsExperience comme variable d entree
+#colonne salary comme variable ciblee
+
+x = data['YearsExperience'].values.reshape(-1,1)#transforme x en tableau 2D pour éviter l'erreur
+y = data['Salary'].values.reshape(-1,1)
+#mettre les points en un graphe
+plt.scatter(x,y)
+plt.xlabel('YearsExperience')
+plt.ylabel('Salary')
+plt.title('Salary vs Experience')
+plt.show()
+ #separer la dataset
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=1/3, random_state=0)
+
+#instancier
+regression = LinearRegression()
+#entrainer le model = produire l equation =lineaire
+regression.fit(x_train, y_train)
+
+#retrouver les coefficients et l ordonnee a l origine de l equation y=ax+b
+print(f'Coefficient a (pente) : {regression.coef_[0]}')
+print(f'Ordonnée à l origine b : {regression.intercept_}')
+#ajouter  sur le graphe la droite 
+ordonne = np.linspace(0, 15, 1000).reshape(-1,1)
+plt.scatter(x,y)
+plt.plot(ordonne, regression.coef_[0]*ordonne + regression.intercept_, color='r')
+plt.xlabel('YearsExperience')
+plt.ylabel('Salary')
+plt.show()
